@@ -6,8 +6,12 @@
 
   :dependencies [[metosin/spec-tools "0.8.2"]]
 
+  :cloverage
+  {:fail-threshold 90
+   :ns-exclude-regex [#"garm.specs"]}
+
   :profiles {:dev {:plugins [[lein-ancient "0.6.15"]
-                             [lein-cloverage "1.0.10"]
+                             [lein-cloverage "1.0.11"]
                              [lein-kibit "0.1.6"]
                              [jonase/eastwood "0.2.5"]]
 
