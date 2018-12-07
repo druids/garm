@@ -19,6 +19,65 @@ Leiningen/Boot
 Documentation
 -------------
 
+### validate
+
+```clojure
+(require '[clojure.spec.alpha :as s]
+         '[garm.core :as garm]
+         '[garm.specs :as specs]))
+
+;; let's define specs
+(s/def ::id specs/uuid)
+(s/def ::price (s/and specs/decimal specs/pos))
+(s/def ::status (specs/enum #{:dispatched :received}))
+
+(s/def ::order (s/keys :req-un [::id ::price ::status]))
+
+;; `validate` function iterates over explained-data and returns a result as
+;; a tuple of `[data errors]`
+;; if data are valid, the `errors` will be `nil` and vice versa
+(garm/validate ::order {:price -1, :status :foo})
+
+;; the result
+[nil {:id [{:args []
+            :id ::specs/must-be-uuid
+            :message "Must be a UUID"}]
+      :price [{:args []
+               :id ::specs/must-be-decimal
+               :message "Must be a decimal"}]
+      :status [{:args []
+                :id :garm.core/missing-key
+                :message "This field is required"}]}]
+
+;; with valid data
+(garm/validate ::order {:status :dispatched
+                        :price 1000
+                        :id #uuid "0428a077-96fd-4050-870e-ed1449266142"})
+[{:status :dispatched
+  :price 1000
+  :id #uuid "0428a077-96fd-4050-870e-ed1449266142"}
+ nil]
+```
+
+### ->json-api-response
+
+It converts a result tuple of `validate` function to JSON API errors format.
+It returns `nil` when the result of `validate` function is successful.
+
+```clojure
+(-> ::order
+    (garm/validate {:status :foo
+                    :price 1000
+                    :id #uuid "0428a077-96fd-4050-870e-ed1449266142"}
+    (garm/->json-api-response))
+
+{:errors [{:id :status
+           :meta {:data [{:id :garm.specs/must-be-one-of
+                          :message "Must be one of %s"
+                          :args [#{:dispatched :received}]
+                          :title "Must be one of received, dispatched"}]}}]}
+;; see formatted message in `:title`
+```
 
 Contribution
 ------------
