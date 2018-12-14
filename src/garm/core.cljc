@@ -1,7 +1,14 @@
 (ns garm.core
   (:require
-   [clojure.spec.alpha :as s]
-   [spec-tools.core :as st]))
+   #?(:clj
+      [clojure.spec.alpha :as s])
+   #?(:cljs
+      [cljs.spec.alpha :as s])
+   [spec-tools.core :as st]
+   #?(:cljs
+      [goog.string.format])
+   #?(:cljs
+      [goog.string :refer [format]])))
 
 (defn missing-key?
   "Returns `true` is a given `problem` is missing key"
@@ -57,13 +64,19 @@
                              conj
                              (problem->reason problem)))
                    {}
-                   (:clojure.spec.alpha/problems explained-data))])))
+                   (::s/problems explained-data))])))
 
 (defmulti ->str type)
 
-(defmethod ->str clojure.lang.Keyword
-  [value]
-  (name value))
+#?(:clj
+   (defmethod ->str clojure.lang.Keyword
+     [value]
+     (name value)))
+
+#?(:cljs
+   (defmethod ->str cljs.core.Keyword
+     [value]
+     (name value)))
 
 (defmethod ->str :default
   [value]
