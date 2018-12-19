@@ -35,6 +35,12 @@
                                    :args []}))
 (s/def ::uuid uuid)
 
+(def non-blank (st/create-spec {:spec (complement clojure.string/blank?)
+                                :reason {:id ::must-not-be-blank
+                                         :message "Must not be blank"
+                                         :args []}}))
+(s/def ::non-blank non-blank)
+
 #?(:clj
    (def decimal (assoc ss/decimal? :reason {:id ::must-be-decimal
                                             :message "Must be a decimal"
