@@ -18,6 +18,9 @@
 (s/def ::missing-reason int?)
 (s/def ::object-wo-reason (s/keys :req-un [::missing-reason]))
 
+(s/def ::address specs/non-blank)
+(s/def ::contact (s/keys :req-un [::address]))
+
 (def now (java.time.Instant/now))
 
 (t/deftest validate-test
@@ -104,7 +107,28 @@
               {:missing-reason [{:args []
                                  :id :garm.core/unknown-error
                                  :message :clojure.core/int?}]}]
-             (garm/validate ::object-wo-reason {:missing-reason ""})))))
+             (garm/validate ::object-wo-reason {:missing-reason ""}))))
+
+  (t/testing "should check non-blank spec"
+    (t/are [expected input] (t/is (= expected (garm/validate ::contact input)))
+           [{:address "asdf"} nil]
+           {:address "asdf"}
+
+           [nil {:address [{:args []
+                            :id :garm.specs/must-not-be-blank
+                            :message "Must not be blank"}]}]
+           {:address " "}
+
+           [nil {:address [{:args []
+                            :id :garm.specs/must-not-be-blank
+                            :message "Must not be blank"}]}]
+           {:address nil}
+
+           [nil {:address [{:args []
+                            :id :garm.specs/must-not-be-blank
+                            :message "Must not be blank"}]}]
+           {:address ""})))
+
 
 (t/deftest ->error-test
   (t/testing "should return an error message placeholder if missing"
