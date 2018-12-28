@@ -1,3 +1,9 @@
+## 0.2.1
+
+#### Fixes
+
+  - Fix #10 errors from nested objects have wrong path
+
 ## 0.2.0
 
 #### New features
