@@ -23,6 +23,9 @@
 
 (def now (java.time.Instant/now))
 
+(s/def ::nested-object
+  (s/keys :req-un [::object-wo-reason]))
+
 (t/deftest validate-test
   (t/testing "should validate given data"
     (t/are [expected spec-model data] (= expected (garm/validate spec-model data))
@@ -127,7 +130,15 @@
            [nil {:address [{:args []
                             :id :garm.specs/must-not-be-blank
                             :message "Must not be blank"}]}]
-           {:address ""})))
+           {:address ""}))
+
+  (t/testing "should validate a nested object"
+    (t/is (= [nil
+              {[:object-wo-reason :missing-reason]
+               [{:args []
+                 :id :garm.core/missing-key
+                 :message "This field is required"}]}]
+             (garm/validate ::nested-object {:object-wo-reason {}})))))
 
 
 (t/deftest ->error-test

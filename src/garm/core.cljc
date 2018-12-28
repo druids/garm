@@ -19,17 +19,18 @@
        (= "contains?" (-> problem :pred (nth 2) (nth 0) name))))
 
 (defn problem->id
-  "Returns an `:id` of a given `problem`, it could return `nil`"
+  "Returns an `:id` of a given `problem`, it could return `nil`.
+  It returns a `vector` for nested keys, for flat structure return `keyword`,
+  otherwise `nil`."
   [problem]
-  (cond
-    (-> problem :in first some?)
-    (-> problem :in first)
-
-    (missing-key? problem)
-    (-> problem :pred (nth 2) (nth 2))
-
-    :else
-    nil))
+  (let [id
+        (if (missing-key? problem)
+          (conj (:in problem) (-> problem :pred (nth 2) (nth 2)))
+          (:in problem))]
+    (case (count id)
+      1 (first id)
+      0 nil
+      id)))
 
 (defn problem->reason
   "Returns a `reason` map of a given `problem`"
@@ -53,7 +54,8 @@
    :price [{:args [], :id ::specs/must-be-decimal, :message \"Must be a decimal\"}]
    :qty [{:args [1 10]
           :id :garm.specs/must-be-in-range
-          :message \"Must be between %s and %s\"}]}]"
+          :message \"Must be between %s and %s\"}]}]
+  For nested structures it returns a `vector` as an ID instead of `keyword`."
   [spec-model data]
   (if (s/valid? spec-model data)
     [data nil]
