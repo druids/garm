@@ -59,6 +59,18 @@ Documentation
  nil]
 ```
 
+Note:
+
+When an error is in a nested object a vector is used for path instead of keyword.
+E.g.:
+```clojure
+{[:object-wo-reason :missing-reason] ;; <-- a key path
+ [{:args []
+   :id :garm.core/missing-key
+   :message "This field is required"}]}]
+
+```
+
 ### ->json-api-response
 
 It converts a result tuple of `validate` function to JSON API errors format.
