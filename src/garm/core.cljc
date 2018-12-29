@@ -60,13 +60,15 @@
   (if (s/valid? spec-model data)
     [data nil]
     (let [explained-data (s/explain-data spec-model data)]
-      [nil (reduce (fn [acc problem]
-                     (update acc
-                             (problem->id problem)
-                             conj
-                             (problem->reason problem)))
-                   {}
-                   (::s/problems explained-data))])))
+      [nil (->> explained-data
+                ::s/problems
+                (reduce (fn [acc problem]
+                          (update acc
+                                  (problem->id problem)
+                                  conj
+                                  (problem->reason problem)))
+                        {})
+                (reduce-kv #(assoc %1 %2 (dedupe %3)) {}))])))
 
 (defmulti ->str type)
 
