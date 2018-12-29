@@ -26,6 +26,10 @@
 (s/def ::nested-object
   (s/keys :req-un [::object-wo-reason]))
 
+(s/def ::a (s/keys :req-un [::id]))
+(s/def ::b (s/keys :req-un [::id ::price]))
+(s/def ::c (s/or :a ::a :b ::b))
+
 (t/deftest validate-test
   (t/testing "should validate given data"
     (t/are [expected spec-model data] (= expected (garm/validate spec-model data))
@@ -138,7 +142,16 @@
                [{:args []
                  :id :garm.core/missing-key
                  :message "This field is required"}]}]
-             (garm/validate ::nested-object {:object-wo-reason {}})))))
+             (garm/validate ::nested-object {:object-wo-reason {}}))))
+
+  (t/testing "should not return duplicated errors for union types"
+    (t/is (= [nil {:id [{:args []
+                         :id :garm.core/missing-key
+                         :message "This field is required"}]
+                   :price [{:args []
+                            :id :garm.core/missing-key
+                            :message "This field is required"}]}]
+             (garm/validate ::c {})))))
 
 
 (t/deftest ->error-test
