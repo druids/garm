@@ -1,3 +1,9 @@
+## 0.2.2
+
+#### Fixes
+
+  - Validate function returns duplicated errors for union types #12
+
 ## 0.2.1
 
 #### Fixes
