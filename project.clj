@@ -1,4 +1,4 @@
-(defproject garm "0.2.1"
+(defproject garm "0.2.2"
   :description "Garm is a library that decorates Clojure Specs for better understanding"
   :url "https://github.com/druids/garm"
   :license {:name "MIT License"
