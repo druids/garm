@@ -55,6 +55,23 @@
 #?(:clj
    (s/def ::inst inst))
 
+(def ^{:doc "Taken from https://www.regular-expressions.info/email.html"
+       :const true}
+  email-regex
+  (re-pattern
+   (str "\\A[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*"
+        "@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\z")))
+
+(def email (st/create-spec
+            {:spec #(and (string? %)
+                         (re-seq email-regex %))
+             :type :string
+             :reason {:id ::must-be-email-address
+                      :message "Must be a valid an e-mail address"
+                      :args []}}))
+
+(s/def ::email email)
+
 (defn in-range
   [min max]
   (st/create-spec {:spec #(<= min % max)

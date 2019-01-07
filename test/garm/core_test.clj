@@ -21,6 +21,8 @@
 (s/def ::address specs/non-blank)
 (s/def ::contact (s/keys :req-un [::address]))
 
+(s/def ::email ::specs/email)
+
 (def now (java.time.Instant/now))
 
 (s/def ::nested-object
@@ -115,6 +117,23 @@
                                  :id :garm.core/unknown-error
                                  :message :clojure.core/int?}]}]
              (garm/validate ::object-wo-reason {:missing-reason ""}))))
+
+  (t/testing "should validate e-mail addresses"
+    (t/are [expected input] (= expected (garm/validate ::email input))
+           [nil
+            {nil [{:args []
+                   :id :garm.specs/must-be-email-address
+                   :message "Must be a valid an e-mail address"}]}]
+           nil
+
+           [nil
+            {nil [{:args []
+                   :id :garm.specs/must-be-email-address
+                   :message "Must be a valid an e-mail address"}]}]
+           "sasa@"
+
+           ["foo@bar.com" nil]
+           "foo@bar.com"))
 
   (t/testing "should check non-blank spec"
     (t/are [expected input] (t/is (= expected (garm/validate ::contact input)))
