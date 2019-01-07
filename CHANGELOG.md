@@ -1,3 +1,9 @@
+## 0.3.0
+
+#### New Features
+
+ - Add e-mail spec close #14
+
 ## 0.2.2
 
 #### Fixes
