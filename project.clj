@@ -4,7 +4,7 @@
   :license {:name "MIT License"
             :url "http://opensource.org/licenses/MIT"}
 
-  :dependencies [[metosin/spec-tools "0.8.2"]
+  :dependencies [[metosin/spec-tools "0.8.3"]
                  [spec-coerce "1.0.0-alpha9"]]
 
   :cloverage
@@ -16,4 +16,4 @@
                              [lein-kibit "0.1.6"]
                              [jonase/eastwood "0.2.5"]]
 
-                   :dependencies [[org.clojure/clojure "1.9.0"]]}})
+                   :dependencies [[org.clojure/clojure "1.10.0"]]}})
