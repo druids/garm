@@ -1,3 +1,10 @@
+## 0.4.0
+
+#### New Features
+
+ - Support for coercing spec-tools records #16
+ - Upgrade dependencies
+
 ## 0.3.0
 
 #### New Features
