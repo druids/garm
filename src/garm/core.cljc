@@ -5,6 +5,7 @@
    #?(:cljs
       [cljs.spec.alpha :as s])
    [spec-tools.core :as st]
+   [garm.spec-tools]
    #?(:cljs
       [goog.string.format])
    #?(:cljs
