@@ -32,6 +32,14 @@
 (s/def ::b (s/keys :req-un [::id ::price]))
 (s/def ::c (s/or :a ::a :b ::b))
 
+(s/def ::length (specs/length 1))
+(s/def ::max-length (specs/max-length 4))
+(s/def ::min-length (specs/min-length 4))
+(s/def ::length-obj
+  (s/keys :req-un [::length
+                   ::max-length
+                   ::min-length]))
+
 (t/deftest validate-test
   (t/testing "should validate given data"
     (t/are [expected spec-model data] (= expected (garm/validate spec-model data))
@@ -170,7 +178,30 @@
                    :price [{:args []
                             :id :garm.core/missing-key
                             :message "This field is required"}]}]
-             (garm/validate ::c {})))))
+             (garm/validate ::c {}))))
+
+  (t/testing "should validate length as valid"
+    (t/is (= [{:length "a"
+               :max-length "abcd"
+               :min-length "abcd"}
+              nil]
+             (garm/validate ::length-obj {:length "a"
+                                          :max-length "abcd"
+                                          :min-length "abcd"}))))
+
+  (t/testing "should return errors for lengths"
+    (t/is (= [nil {:length [{:args [1]
+                             :id :garm.specs/length
+                             :message "Must have length equal to %s"}]
+                   :max-length [{:args [4]
+                                 :id :garm.specs/max-length
+                                 :message "Must not be longer then %s"}]
+                   :min-length [{:args [4]
+                                 :id :garm.specs/min-length
+                                 :message "Must not be shorter then %s"}]}]
+             (garm/validate ::length-obj {:length ""
+                                          :max-length "abcde"
+                                          :min-length "abc"})))))
 
 
 (t/deftest ->error-test

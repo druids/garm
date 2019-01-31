@@ -85,3 +85,21 @@
                    :reason {:id ::must-be-one-of
                             :message "Must be one of %s"
                             :args [values]}}))
+
+(defn- length-validation
+  [op id message length]
+  (st/create-spec {:spec #(try
+                            (op (count %) length)
+                            #?(:clj
+                               (catch java.lang.UnsupportedOperationException _ false))
+                            #?(:cljs
+                               (catch :default _ false)))
+                   :reason {:id id
+                            :message message
+                            :args [length]}}))
+
+(def length (partial length-validation = ::length "Must have length equal to %s"))
+
+(def max-length (partial length-validation <= ::max-length "Must not be longer then %s"))
+
+(def min-length (partial length-validation >= ::min-length "Must not be shorter then %s"))
