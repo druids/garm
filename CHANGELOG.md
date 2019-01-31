@@ -1,3 +1,9 @@
+## 0.5.0
+
+#### New Features
+
+ - Add length, max-length and min-length specs fix #19
+
 ## 0.4.0
 
 #### New Features
