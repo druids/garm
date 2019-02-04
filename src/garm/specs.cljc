@@ -1,9 +1,14 @@
 (ns garm.specs
-  (:refer-clojure :exclude [int bigdec uuid keyword])
+  (:refer-clojure :exclude [boolean int bigdec uuid keyword])
   (:require
    [clojure.spec.alpha :as s]
    [spec-tools.core :as st]
    [spec-tools.spec :as ss]))
+
+(def boolean (assoc ss/boolean? :reason {:id ::must-be-boolean
+                                         :message "Must be a boolean"
+                                         :args []}))
+(s/def ::boolean boolean)
 
 (def pos (assoc ss/pos? :reason {:id ::must-be-positive
                                  :message "Must be positive"
