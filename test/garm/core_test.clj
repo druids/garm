@@ -40,6 +40,10 @@
                    ::max-length
                    ::min-length]))
 
+(s/def ::bool ::specs/boolean)
+(s/def ::bool-obj
+  (s/keys :req-un [::bool]))
+
 (t/deftest validate-test
   (t/testing "should validate given data"
     (t/are [expected spec-model data] (= expected (garm/validate spec-model data))
@@ -179,6 +183,15 @@
                             :id :garm.core/missing-key
                             :message "This field is required"}]}]
              (garm/validate ::c {}))))
+
+  (t/testing "should validate a boolean"
+    (t/are [expected input] (= expected (garm/validate ::bool-obj input))
+      [{:bool true} nil] {:bool true}
+      [{:bool false} nil] {:bool false}
+      [nil {:bool [{:args []
+                    :id :garm.specs/must-be-boolean
+                    :message "Must be a boolean"}]}]
+      {:bool ""}))
 
   (t/testing "should validate length as valid"
     (t/is (= [{:length "a"

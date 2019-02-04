@@ -1,3 +1,9 @@
+## 0.6.0
+
+#### New Features
+
+ - Add a spec for boolean fix #21
+
 ## 0.5.0
 
 #### New Features
