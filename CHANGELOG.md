@@ -1,3 +1,9 @@
+## 0.6.1
+
+#### FIxes
+
+ - Fix #23 a spec for Number in ClojureScript
+
 ## 0.6.0
 
 #### New Features
