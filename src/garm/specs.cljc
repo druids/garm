@@ -20,10 +20,20 @@
                                  :args []}))
 (s/def ::int int)
 
-(def number (assoc ss/number? :reason {:id ::must-be-number
-                                       :message "Must be a number"
-                                       :args []}))
-(s/def ::number number)
+(defn -number?
+  [x]
+  #?(:clj (number? x))
+  ;; it fixes a validation for Number type
+  ;; https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number
+  #?(:cljs (or (number? x)
+               (if (some? x)
+                 (-> x .-constructor .-name (= "Number"))
+                 true))))
+(s/def ::number
+  (st/create-spec {:spec -number?
+                   :reason {:id ::must-be-number
+                            :message "Must be a number"
+                            :args []}}))
 
 (def string (assoc ss/string? :reason {:id ::must-be-string
                                        :message "Must be a string"
