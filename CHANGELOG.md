@@ -1,3 +1,9 @@
+## 0.7.1
+
+#### Fixes
+
+ - Fix #28 coercion doesn't work for number in CLJS
+
 ## 0.7.0
 
 #### New Features
