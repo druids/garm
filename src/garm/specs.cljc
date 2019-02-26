@@ -1,5 +1,5 @@
 (ns garm.specs
-  (:refer-clojure :exclude [boolean int bigdec uuid keyword])
+  (:refer-clojure :exclude [boolean int bigdec uuid keyword map])
   (:require
    [clojure.spec.alpha :as s]
    [spec-tools.core :as st]
@@ -19,6 +19,11 @@
                                  :message "Must be an integer"
                                  :args []}))
 (s/def ::int int)
+
+(def map (assoc ss/map? :reason {:id ::must-be-map
+                                 :message "Must be a map"
+                                 :args []}))
+(s/def ::map map)
 
 (defn -number?
   [x]
@@ -82,7 +87,7 @@
                          (re-seq email-regex %))
              :type :string
              :reason {:id ::must-be-email-address
-                      :message "Must be a valid an e-mail address"
+                      :message "Must be a valid e-mail address"
                       :args []}}))
 
 (s/def ::email email)
