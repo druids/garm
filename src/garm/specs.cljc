@@ -36,6 +36,7 @@
                  true))))
 (s/def ::number
   (st/create-spec {:spec -number?
+                   :form `number?
                    :reason {:id ::must-be-number
                             :message "Must be a number"
                             :args []}}))
