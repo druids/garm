@@ -44,6 +44,10 @@
 (s/def ::bool-obj
   (s/keys :req-un [::bool]))
 
+(s/def ::map ::specs/map)
+(s/def ::map-obj
+  (s/keys :req-un [::map]))
+
 (t/deftest validate-test
   (t/testing "should validate given data"
     (t/are [expected spec-model data] (= expected (garm/validate spec-model data))
@@ -135,13 +139,13 @@
            [nil
             {nil [{:args []
                    :id :garm.specs/must-be-email-address
-                   :message "Must be a valid an e-mail address"}]}]
+                   :message "Must be a valid e-mail address"}]}]
            nil
 
            [nil
             {nil [{:args []
                    :id :garm.specs/must-be-email-address
-                   :message "Must be a valid an e-mail address"}]}]
+                   :message "Must be a valid e-mail address"}]}]
            "sasa@"
 
            ["foo@bar.com" nil]
@@ -192,6 +196,18 @@
                     :id :garm.specs/must-be-boolean
                     :message "Must be a boolean"}]}]
       {:bool ""}))
+
+  (t/testing "should validate a map"
+    (t/are [expected input] (= expected (garm/validate ::map-obj input))
+      [{:map {}} nil] {:map {}}
+      [nil {:map [{:args []
+                   :id :garm.specs/must-be-map
+                   :message "Must be a map"}]}]
+      {:map ""}
+      [nil {:map [{:args []
+                   :id :garm.specs/must-be-map
+                   :message "Must be a map"}]}]
+      {:map ""}))
 
   (t/testing "should validate length as valid"
     (t/is (= [{:length "a"
