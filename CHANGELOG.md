@@ -1,6 +1,12 @@
+## 0.7.0
+
+#### New Features
+
+ - Fix #26 by adding a spec for a map
+
 ## 0.6.1
 
-#### FIxes
+#### Fixes
 
  - Fix #23 a spec for Number in ClojureScript
 
