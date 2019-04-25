@@ -11,9 +11,24 @@
   {:fail-threshold 90
    :ns-exclude-regex [#"garm.specs"]}
 
+  :aliases {"cljs-test"
+            ["with-profile" "dev" "doo" "phantom" "once"]}
+
+  :doo {:build "test"}
+
+  :cljsbuild {:builds
+              [{:id "test"
+                :source-paths ["src" "test"]
+                :compiler {:output-to "target/js/compiled/testable.js"
+                           :main garm.test-runner
+                           :optimizations :none}}]}
+
   :profiles {:dev {:plugins [[lein-ancient "0.6.15"]
+                             [lein-cljsbuild "1.1.7"]
                              [lein-cloverage "1.0.11"]
+                             [lein-doo "0.1.10"]
                              [lein-kibit "0.1.6"]
                              [jonase/eastwood "0.2.5"]]
 
-                   :dependencies [[org.clojure/clojure "1.10.0"]]}})
+                   :dependencies [[org.clojure/clojure "1.10.0"]
+                                  [org.clojure/clojurescript "1.10.520"]]}})
