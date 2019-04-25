@@ -149,7 +149,10 @@
            "sasa@"
 
            ["foo@bar.com" nil]
-           "foo@bar.com"))
+           "foo@bar.com"
+
+           ["Foo@bar.com" nil]
+           "Foo@bar.com"))
 
   (t/testing "should check non-blank spec"
     (t/are [expected input] (t/is (= expected (garm/validate ::contact input)))
