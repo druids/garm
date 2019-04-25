@@ -1,3 +1,9 @@
+## 0.7.2
+
+#### Fixes
+
+ - Fix #30 E-mail spec is not a case insensitive
+
 ## 0.7.1
 
 #### Fixes
