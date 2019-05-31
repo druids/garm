@@ -1,3 +1,8 @@
+## 0.8.0
+
+ - Fix #14 nilable spec in an error message
+ - Upgrade dependencies
+
 ## 0.7.2
 
 #### Fixes

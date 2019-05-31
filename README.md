@@ -12,7 +12,7 @@ Leiningen/Boot
 --------------
 
 ```clojure
-[garm "0.7.2"]
+[garm "0.8.0"]
 ```
 
 
