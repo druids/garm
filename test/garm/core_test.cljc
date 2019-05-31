@@ -48,6 +48,11 @@
 (s/def ::map-obj
   (s/keys :req-un [::map]))
 
+(s/def ::int ::specs/int)
+(s/def ::nilable-int (s/nilable ::int))
+(s/def ::nilable-obj
+  (s/keys :req-un [::nilable-int]))
+
 (t/deftest validate-test
   #?(:clj
      (t/testing "should validate given data"
@@ -161,7 +166,13 @@
            "foo@bar.com"
 
            ["FOO@BAR.COM" nil]
-           "FOO@BAR.COM")))
+           "FOO@BAR.COM"))
+
+  (t/testing "should not return messages for nilables"
+    (t/is (= [nil {:nilable-int [{:id :garm.specs/must-be-integer
+                                  :message "Must be an integer"
+                                  :args []}]}]
+             (garm/validate ::nilable-obj {:nilable-int "10"})))))
 
 (t/deftest a-test
   (t/is (= ["FOO" "foo"] (re-seq (re-pattern "(?i)foo") "FOO BAR foo bar")))

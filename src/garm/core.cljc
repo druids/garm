@@ -44,7 +44,13 @@
     {:id ::missing-key, :message "This field is required", :args []}
 
     :else
-    {:id ::unknown-error, :message (-> problem :pred str keyword) :args []}))
+    {:id ::unknown-error
+     :message (-> problem :pred str keyword)
+     :args []}))
+
+(defn nilable-spec?
+  [problem]
+  (= ::s/nil (-> problem :path last)))
 
 (defn validate
   "Validates given `data` with a given `spec-model`. It return a tuple like
@@ -64,10 +70,13 @@
       [nil (->> explained-data
                 ::s/problems
                 (reduce (fn [acc problem]
-                          (update acc
-                                  (problem->id problem)
-                                  conj
-                                  (problem->reason problem)))
+                          (if (nilable-spec? problem)
+                            ;; skip error message for nilables
+                            acc
+                            (update acc
+                                    (problem->id problem)
+                                    conj
+                                    (problem->reason problem))))
                         {})
                 (reduce-kv #(assoc %1 %2 (dedupe %3)) {}))])))
 
